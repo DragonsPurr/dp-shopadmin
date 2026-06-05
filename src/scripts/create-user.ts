@@ -64,7 +64,7 @@ export default async function createUser({ container }: ExecArgs) {
     },
   })
 
-  if (error) {
+  if (error || !authIdentity) {
     throw new Error(
       typeof error === "string" ? error : "Failed to register user credentials."
     )

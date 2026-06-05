@@ -62,7 +62,14 @@ class ShipStationProviderService extends AbstractFulfillmentProviderService {
     const perUnit =
       // @ts-ignore variant/product may be loaded on line items
       item.variant?.weight ?? item.product?.weight ?? 0
-    return perUnit * (item.quantity ?? 1)
+    const qty = item.quantity
+    const quantity =
+      typeof qty === "number"
+        ? qty
+        : typeof qty === "object" && qty != null && "numeric" in qty
+          ? qty.numeric
+          : Number(qty ?? 1)
+    return perUnit * quantity
   }
 
   private async createShipment({
