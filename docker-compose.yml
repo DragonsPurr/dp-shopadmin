@@ -29,7 +29,7 @@ services:
       - traefik.http.routers.${HOSTNAME}.tls=true
       - traefik.http.routers.${HOSTNAME}.entrypoints=websecure
       - traefik.http.routers.${HOSTNAME}.service=${HOSTNAME}
-      - traefik.http.routers.${HOSTNAME}.tls.certresolver=letsencrypt
+      - traefik.http.routers.${HOSTNAME}.tls.certresolver=leresolver
       - traefik.http.services.${HOSTNAME}.loadbalancer.server.port=${PORT}
       - traefik.http.middlewares.${HOSTNAME}.headers.SSLRedirect=true
       - traefik.http.middlewares.${HOSTNAME}.headers.STSSeconds=315360000
