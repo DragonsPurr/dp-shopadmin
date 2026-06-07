@@ -3,12 +3,17 @@ name: Publish Docker image
 on:
   push:
 
+concurrency:
+  group: docker-publish-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
   packages: write
 
 jobs:
   build-and-push:
+    if: startsWith(github.event.head_commit.message, 'BUILD: ')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -41,5 +46,7 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          provenance: false
+          shm-size: 2g
+          cache-from: type=gha,scope=${{ github.workflow }}
+          cache-to: type=gha,mode=max,scope=${{ github.workflow }}
