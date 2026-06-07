@@ -1,7 +1,7 @@
 ---
 services:
   medusa:
-    image: ghcr.io/dragonspurr/dpshopadmin:latest
+    image: ghcr.io/dragonspurr/dp-shopadmin:latest
     expose:
       - 9000
     environment:
