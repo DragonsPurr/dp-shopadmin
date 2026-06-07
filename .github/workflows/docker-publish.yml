@@ -11,9 +11,12 @@ permissions:
   contents: read
   packages: write
 
+env:
+  BUILD_COMMIT_PREFIX: "BUILD: "
+
 jobs:
   build-and-push:
-    if: startsWith(github.event.head_commit.message, 'BUILD: ')
+    if: ${{ startsWith(github.event.head_commit.message, env.BUILD_COMMIT_PREFIX) }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
