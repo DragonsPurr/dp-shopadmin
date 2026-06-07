@@ -6,8 +6,8 @@ services:
       - 9000
     environment:
       STORE_CORS: http://localhost:8000,https://docs.medusajs.com,https://dragonspurr.ca
-      ADMIN_CORS: http://localhost:5173,http://localhost:9000,https://docs.medusajs.com,https://shopadmin.dragonspurr.ca
-      AUTH_CORS: http://localhost:5173,http://localhost:9000,http://localhost:8000,https://docs.medusajs.com
+      ADMIN_CORS: http://localhost:5173,http://localhost:9000,https://docs.medusajs.com,https://shopadmin.dragonspurr.ca,https://dragonspurr.ca
+      AUTH_CORS: http://localhost:5173,http://localhost:9000,http://localhost:8000,https://docs.medusajs.com,https://dragonspurr.ca
       REDIS_URL: ${REDIS_URL}
       JWT_SECRET: ${JWT_SECRET}
       COOKIE_SECRET: ${COOKIE_SECRET}
