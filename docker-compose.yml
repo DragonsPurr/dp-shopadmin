@@ -1,0 +1,40 @@
+---
+services:
+  medusa:
+    image: ghcr.io/dragonspurr/shopadmin:latest
+    expose:
+      - 9000
+    environment:
+      STORE_CORS: http://localhost:8000,https://docs.medusajs.com,https://dragonspurr.ca
+      ADMIN_CORS: http://localhost:5173,http://localhost:9000,https://docs.medusajs.com,https://shopadmin.dragonspurr.ca
+      AUTH_CORS: http://localhost:5173,http://localhost:9000,http://localhost:8000,https://docs.medusajs.com
+      REDIS_URL: ${REDIS_URL}
+      JWT_SECRET: ${JWT_SECRET}
+      COOKIE_SECRET: ${COOKIE_SECRET}
+      DATABASE_URL: ${DATABASE_URL}
+      MAILGUN_API_KEY: ${MAILGUN_API_KEY}
+      MAILGUN_DOMAIN: mg.dragonspurr.ca
+      MAILGUN_FROM: noreply+shop@mg.dragonspurr.ca
+      MAILGUN_API_URL: https://api.mailgun.net
+      MAILGUN_DEFAULT_LOCALE: en
+      STRIPE_API_KEY: ${STRIPE_API_KEY}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET}
+      SHIPSTATION_API_KEY: ${SHIPSTATION_API_KEY}
+    networks:
+      - shared-network
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=shared-network
+      - traefik.http.routers.${HOSTNAME}.rule=Host(`${HOSTNAME}.${DOMAIN}`)
+      - traefik.http.routers.${HOSTNAME}.tls=true
+      - traefik.http.routers.${HOSTNAME}.entrypoints=websecure
+      - traefik.http.routers.${HOSTNAME}.service=${HOSTNAME}
+      - traefik.http.routers.${HOSTNAME}.tls.certresolver=letsencrypt
+      - traefik.http.services.${HOSTNAME}.loadbalancer.server.port=${PORT}
+      - traefik.http.middlewares.${HOSTNAME}.headers.SSLRedirect=true
+      - traefik.http.middlewares.${HOSTNAME}.headers.STSSeconds=315360000
+      - traefik.http.middlewares.${HOSTNAME}.headers.browserXSSFilter=true
+
+networks:
+  shared-network:
+    external: true
