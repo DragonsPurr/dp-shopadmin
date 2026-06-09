@@ -15,6 +15,7 @@ node_modules
 
 # Testing
 coverage
+integration-tests/.skip-http-integration
 
 # Next.js
 **/.next/
@@ -23,6 +24,7 @@ coverage
 # Production
 **/build
 **/dist
+.medusa
 
 # Misc
 *.pem
@@ -34,6 +36,7 @@ yarn-error.log*
 
 # Local env files
 **/.env
+**/.env.production
 **/.env.local
 **/.env.development.local
 **/.env.test.local
