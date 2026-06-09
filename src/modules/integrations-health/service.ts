@@ -12,6 +12,7 @@ import {
   IntegrationTestResult,
 } from "./types"
 import { getAllowedRevealKeys, getSanitizedConfig, revealConfigValue } from "./sanitize-config"
+import { buildS3PublicObjectUrl } from "../../utils/s3-public-url"
 
 type IntegrationMeta = {
   id: IntegrationId
@@ -396,12 +397,7 @@ class IntegrationsHealthService {
           content_type: contentType,
           etag: response.ETag ?? null,
           last_modified: response.LastModified?.toISOString() ?? null,
-          public_url: process.env.S3_FILE_URL
-            ? `${process.env.S3_FILE_URL.replace(/\/$/, "")}/${key
-                .split("/")
-                .map(encodeURIComponent)
-                .join("/")}`
-            : null,
+          public_url: buildS3PublicObjectUrl(key),
         },
       }
     } catch (error) {

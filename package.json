@@ -19,6 +19,7 @@
     "seed": "medusa exec src/scripts/seed.ts",
     "createUser": "medusa exec src/scripts/create-user.ts",
     "resetAdminPassword": "medusa exec src/scripts/reset-admin-password.ts",
+    "fixS3PublicUrls": "medusa exec src/scripts/fix-s3-public-urls.ts",
     "test:integration:http": "TEST_TYPE=integration:http NODE_OPTIONS=--experimental-vm-modules jest --silent=false --runInBand --forceExit",
     "test:integration:http:services": "podman compose -f docker-compose.test.yml up -d --wait && TEST_DATABASE_URL=postgres://postgres:postgres@localhost:5433/medusa_integration_test TEST_REDIS_URL=redis://localhost:6380 npm run test:integration:http",
     "test:integration:http:services:down": "podman compose -f docker-compose.test.yml down -v",
