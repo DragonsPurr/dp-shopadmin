@@ -1,5 +1,7 @@
 import {
   buildS3PublicObjectUrl,
+  getAdminFaviconMimeType,
+  getAdminFaviconUrl,
   getS3PublicBaseUrl,
   rewriteS3PublicUrl,
 } from "../s3-public-url"
@@ -35,6 +37,27 @@ describe("s3-public-url", () => {
     expect(buildS3PublicObjectUrl("products/test image.png")).toBe(
       "https://dp-shop-assets.s3.ca-east-tor.io.cloud.ovh.net/products/test%20image.png"
     )
+  })
+
+  it("builds admin favicon URL from bucket root", () => {
+    process.env.S3_FILE_URL =
+      "https://s3.ca-east-tor.io.cloud.ovh.net/dp-shop-assets"
+
+    expect(getAdminFaviconUrl()).toBe(
+      "https://dp-shop-assets.s3.ca-east-tor.io.cloud.ovh.net/favicon.ico"
+    )
+    expect(getAdminFaviconMimeType()).toBe("image/x-icon")
+  })
+
+  it("supports custom admin favicon keys and mime types", () => {
+    process.env.S3_FILE_URL =
+      "https://s3.ca-east-tor.io.cloud.ovh.net/dp-shop-assets"
+    process.env.ADMIN_FAVICON_KEY = "favicon.svg"
+
+    expect(getAdminFaviconUrl()).toBe(
+      "https://dp-shop-assets.s3.ca-east-tor.io.cloud.ovh.net/favicon.svg"
+    )
+    expect(getAdminFaviconMimeType()).toBe("image/svg+xml")
   })
 
   it("rewrites stored image URLs", () => {

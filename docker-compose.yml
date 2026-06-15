@@ -7,7 +7,7 @@ services:
     environment:
       STORE_CORS: http://localhost:8000,https://docs.medusajs.com,https://dragonspurr.ca,https://s3.ca-east-tor.io.cloud.ovh.net
       ADMIN_CORS: http://localhost:5173,http://localhost:9000,https://docs.medusajs.com,https://shopadmin.dragonspurr.ca,https://dragonspurr.ca,https://s3.ca-east-tor.io.cloud.ovh.net
-      AUTH_CORS: http://localhost:5173,http://localhost:9000,http://localhost:8000,https://docs.medusajs.com,https://dragonspurr.ca,https://s3.ca-east-tor.io.cloud.ovh.net
+      AUTH_CORS: http://localhost:5173,http://localhost:9000,http://localhost:8000,https://docs.medusajs.com,https://shopadmin.dragonspurr.ca,https://dragonspurr.ca,https://s3.ca-east-tor.io.cloud.ovh.net
       REDIS_URL: ${REDIS_URL}
       JWT_SECRET: ${JWT_SECRET}
       COOKIE_SECRET: ${COOKIE_SECRET}
@@ -28,6 +28,11 @@ services:
       S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY}
       S3_PREFIX: ${S3_PREFIX:-}
       S3_FORCE_PATH_STYLE: ${S3_FORCE_PATH_STYLE:-}
+      MEDUSA_BACKEND_URL: ${MEDUSA_BACKEND_URL:-https://shopadmin.dragonspurr.ca}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      GOOGLE_WORKSPACE_DOMAIN: ${GOOGLE_WORKSPACE_DOMAIN:-dragonspurr.ca}
+      GOOGLE_CALLBACK_URL: ${GOOGLE_CALLBACK_URL:-}
     networks:
       - shared-network
     labels:

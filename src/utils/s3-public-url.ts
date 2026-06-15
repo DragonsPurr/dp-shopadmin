@@ -33,6 +33,31 @@ export function buildS3PublicObjectUrl(objectKey: string): string {
   return `${getS3PublicBaseUrl()}/${encodedKey}`
 }
 
+const DEFAULT_ADMIN_FAVICON_KEY = "favicon.ico"
+
+export function getAdminFaviconKey(): string {
+  const key = process.env.ADMIN_FAVICON_KEY?.trim()
+  return key || DEFAULT_ADMIN_FAVICON_KEY
+}
+
+export function getAdminFaviconUrl(): string {
+  return buildS3PublicObjectUrl(getAdminFaviconKey())
+}
+
+export function getAdminFaviconMimeType(key = getAdminFaviconKey()): string {
+  const lower = key.toLowerCase()
+
+  if (lower.endsWith(".svg")) {
+    return "image/svg+xml"
+  }
+
+  if (lower.endsWith(".png")) {
+    return "image/png"
+  }
+
+  return "image/x-icon"
+}
+
 export function rewriteS3PublicUrl(url: string): string {
   const bucket = process.env.S3_BUCKET ?? ""
   const region = process.env.S3_REGION ?? ""

@@ -1,15 +1,39 @@
+import path from 'path'
 import { loadEnv, defineConfig } from '@medusajs/framework/utils'
 import {
   accountVerificationSubject,
   getAccountVerificationTemplate,
 } from './src/emails/account-verification'
-import { getS3PublicBaseUrl } from './src/utils/s3-public-url'
+import {
+  getAdminFaviconMimeType,
+  getAdminFaviconUrl,
+  getS3PublicBaseUrl,
+} from './src/utils/s3-public-url'
+import { ADMIN_TITLE } from './src/admin/lib/constants'
 
 loadEnv(process.env.NODE_ENV || 'development', process.cwd())
+
+const ADMIN_PATH = process.env.MEDUSA_ADMIN_PATH || '/app'
 
 module.exports = defineConfig({
   admin: {
     backendUrl: process.env.MEDUSA_BACKEND_URL,
+    path: ADMIN_PATH as `/${string}`,
+    vite: () => ({
+      publicDir: path.join(process.cwd(), 'src/admin/public'),
+      plugins: [
+        {
+          name: 'custom-admin-head',
+          transformIndexHtml(html) {
+            return html.replace(
+              '<link rel="icon" href="data:," data-placeholder-favicon />',
+              `<link rel="icon" type="${getAdminFaviconMimeType()}" href="${getAdminFaviconUrl()}" />
+            <title>${ADMIN_TITLE}</title>`
+            )
+          },
+        },
+      ],
+    }),
   },
   projectConfig: {
     databaseUrl: process.env.DATABASE_URL,
@@ -23,6 +47,28 @@ module.exports = defineConfig({
     }
   },
   modules: [
+    {
+      resolve: "@medusajs/medusa/auth",
+      options: {
+        providers: [
+          {
+            resolve: "@medusajs/medusa/auth-emailpass",
+            id: "emailpass",
+          },
+          {
+            resolve: "@medusajs/medusa/auth-google",
+            id: "google",
+            options: {
+              clientId: process.env.GOOGLE_CLIENT_ID,
+              clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+              callbackUrl:
+                process.env.GOOGLE_CALLBACK_URL ||
+                `${process.env.MEDUSA_BACKEND_URL || "http://localhost:9000"}/auth/user/google`,
+            },
+          },
+        ],
+      },
+    },
     {
       resolve: "./src/modules/integrations-health",
     },

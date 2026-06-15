@@ -33,36 +33,65 @@ export default async function initial_data_seed({
   const fulfillmentModuleService = container.resolve(
     ModuleRegistrationName.FULFILLMENT
   );
+  const storeModuleService = container.resolve(Modules.STORE);
+  const salesChannelModuleService = container.resolve(Modules.SALES_CHANNEL);
+
+  const existingStores = await storeModuleService.listStores();
+  if (existingStores.length > 0) {
+    logger.info("Initial data already seeded, skipping.");
+    return;
+  }
 
   const countries = ["gb", "de", "dk", "se", "fr", "es", "it"];
 
   logger.info("Seeding store data...");
-  const {
-    result: [defaultSalesChannel],
-  } = await createSalesChannelsWorkflow(container).run({
-    input: {
-      salesChannelsData: [
-        {
-          name: "Default Sales Channel",
-          description: "Created by Medusa",
-        },
-      ],
+  const existingSalesChannels =
+    await salesChannelModuleService.listSalesChannels({
+      name: "Default Sales Channel",
+    });
+
+  let defaultSalesChannel = existingSalesChannels[0];
+  if (!defaultSalesChannel) {
+    const {
+      result: [createdSalesChannel],
+    } = await createSalesChannelsWorkflow(container).run({
+      input: {
+        salesChannelsData: [
+          {
+            name: "Default Sales Channel",
+            description: "Created by Medusa",
+          },
+        ],
+      },
+    });
+    defaultSalesChannel = createdSalesChannel;
+  }
+
+  const { data: existingApiKeys } = await query.graph({
+    entity: "api_key",
+    fields: ["id"],
+    filters: {
+      type: "publishable",
     },
   });
 
-  const {
-    result: [publishableApiKey],
-  } = await createApiKeysWorkflow(container).run({
-    input: {
-      api_keys: [
-        {
-          title: "Default Publishable API Key",
-          type: "publishable",
-          created_by: "",
-        },
-      ],
-    },
-  });
+  let publishableApiKey = existingApiKeys?.[0];
+  if (!publishableApiKey) {
+    const {
+      result: [createdApiKey],
+    } = await createApiKeysWorkflow(container).run({
+      input: {
+        api_keys: [
+          {
+            title: "Default Publishable API Key",
+            type: "publishable",
+            created_by: "",
+          },
+        ],
+      },
+    });
+    publishableApiKey = createdApiKey;
+  }
 
   await linkSalesChannelsToApiKeyWorkflow(container).run({
     input: {
