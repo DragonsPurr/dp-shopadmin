@@ -15,6 +15,7 @@ describe("s3-public-url", () => {
       S3_BUCKET: "dp-shop-assets",
       S3_REGION: "ca-east-tor",
     }
+    delete process.env.ADMIN_FAVICON_KEY
   })
 
   afterEach(() => {
