@@ -32,7 +32,7 @@ services:
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
       GOOGLE_WORKSPACE_DOMAIN: ${GOOGLE_WORKSPACE_DOMAIN:-dragonspurr.ca}
-      GOOGLE_CALLBACK_URL: ${GOOGLE_CALLBACK_URL:-}
+      ADMIN_FAVICON_KEY: dragonspurr_favicon.png
     networks:
       - shared-network
     labels:
