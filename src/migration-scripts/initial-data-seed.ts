@@ -21,6 +21,7 @@ import {
   linkSalesChannelsToApiKeyWorkflow,
   linkSalesChannelsToStockLocationWorkflow,
 } from "@medusajs/medusa/core-flows";
+import { ApiKey } from "../../.medusa/types/query-entry-points";
 
 export default async function initial_data_seed({
   container,
@@ -75,7 +76,7 @@ export default async function initial_data_seed({
     },
   });
 
-  let publishableApiKey = existingApiKeys?.[0];
+  let publishableApiKey: ApiKey | null = existingApiKeys?.[0] ?? null;
   if (!publishableApiKey) {
     const {
       result: [createdApiKey],
@@ -90,7 +91,7 @@ export default async function initial_data_seed({
         ],
       },
     });
-    publishableApiKey = createdApiKey;
+    publishableApiKey = createdApiKey as ApiKey;
   }
 
   await linkSalesChannelsToApiKeyWorkflow(container).run({
