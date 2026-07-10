@@ -34,7 +34,8 @@ services:
       GOOGLE_WORKSPACE_DOMAIN: ${GOOGLE_WORKSPACE_DOMAIN:-dragonspurr.ca}
       ADMIN_FAVICON_KEY: dragonspurr_favicon.png
     networks:
-      - shared-network
+      shared-network:
+        ipv4_address: 10.0.0.70
     labels:
       - traefik.enable=true
       - traefik.docker.network=shared-network
